@@ -9,9 +9,17 @@ struct Student{
 	string id;
 	double coursework;
 	double finalExam;
-	double totalMark;
-	
+	double totalMark;	
 };
+
+struct node {
+    Student *studentdata;
+    node *pNext;
+    node *pPrev;
+};
+
+node *pHead = NULL;
+node *pTail = NULL;
 
 int validateInput(int lowerLimit, int upperLimit)
 {
@@ -91,25 +99,63 @@ void programStartQuit(bool& continueExecuting)
 	}
 }
 
-void fillArray(string fileName, int& rows, Student students[])
-{
-	string readHeader;
-	ifstream readFile(fileName.c_str());
-	
-	if (!readFile)
-	{
-		cout << "ERROR! File could not be found." << endl;
-		exit(1); // Exiting as the file is not found
-	}
-	else 
-	{
-		getline(readFile, readHeader);
-		
-		while (readFile >> students[rows].id >> students[rows].coursework >> students[rows].finalExam)
-		{
-			rows++;
-		}
-	}
+void AppendNode(node *pNode) {
+    if (pHead == NULL) {
+        // List is empty
+        pHead = pTail = pNode;
+        pNode->pNext = pNode->pPrev = NULL;
+    } else {
+        // Append at the end
+        pTail->pNext = pNode;
+        pNode->pPrev = pTail;
+        pNode->pNext = NULL;
+        pTail = pNode;  // Correctly updating the tail
+    }
+}
+
+void FreeList(node *pHead) {
+    node *current = pHead;
+    node *next;
+
+    while (current != NULL) {
+        next = current->pNext;
+        delete current->studentdata;  // Free the Student object
+        delete current;               // Free the node
+        current = next;
+    }
+}
+
+void fillArray(string fileName, int& rows, node*& pHead) {
+    ifstream readFile(fileName.c_str());
+
+    if (!readFile) {
+        cout << "ERROR! File could not be found." << endl;
+        exit(1); // Exiting as the file is not found
+    } else {
+        string id;
+        double coursework, finalexam;
+
+        // Read through the file and append to the linked list
+        while (!readFile.eof()) {
+			readFile >> id >> coursework >> finalexam;
+            // Allocate and fill student object
+            Student* student = new Student;
+            student->id = id;
+            student->coursework = coursework;
+            student->finalExam = finalexam;
+
+            // Print debug information
+            cout << "Adding Student ID: " << student->id << ", Coursework: " 
+                 << student->coursework << ", Final Exam: " << student->finalExam << endl;
+
+            // Allocate new node
+            node* pNode = new node;
+            pNode->studentdata = student;
+
+            // Append to linked list
+            AppendNode(pNode);
+        }
+    }
 }
 
 string determineGrade(double totalMark)
@@ -174,20 +220,29 @@ int UpdateMark_Validation(int lowerLimit, int upperLimit)
     return input;
 }
 
-void printEntireList(Student students[], int size)
-{
-	cout << "\nThe Entire List of Students with Grades:" << endl;
-	cout << "\n" << left << setw(20) << "ID" << setw(20) << "Coursework" << setw(20) << "Final Exam" << setw(20) << "Grade" << endl;
-	cout << "-----------------------------------------------------------------" << endl;
-	
-	for (int i = 0; i < size; i++)
-	{
-		students[i].totalMark = students[i].coursework + students[i].finalExam;
-		string studentGrade = determineGrade(students[i].totalMark);
-		
-		cout << left << setw(20) << students[i].id << setw(20) << students[i].coursework << setw(20) << students[i].finalExam << setw(20) << setw(20) << studentGrade << endl;
-		cout << "-----------------------------------------------------------------" << endl;
-	}
+void printEntireList(node* pHead) {
+    if (pHead == NULL) {
+        cout << "The student list is empty." << endl;
+        return;
+    }
+
+    cout << "\nThe Entire List of Students with Grades:" << endl;
+    cout << left << setw(20) << "ID" << setw(20) << "Coursework" 
+         << setw(20) << "Final Exam" << setw(20) << "Grade" << endl;
+    cout << "-----------------------------------------------------------------" << endl;
+
+    node* current = pHead;
+    while (current != NULL) {
+        Student* student = current->studentdata;
+        student->totalMark = student->coursework + student->finalExam;
+        string studentGrade = determineGrade(student->totalMark);
+        
+        cout << left << setw(20) << student->id << setw(20) << student->coursework 
+             << setw(20) << student->finalExam << setw(20) << studentGrade << endl;
+        cout << "-----------------------------------------------------------------" << endl;
+
+        current = current->pNext;
+    }
 }
 
 void updateMark(Student students[], int size)
@@ -399,62 +454,48 @@ void printHighestScorersDetails(Student students[], int size)
 
 int main()
 {
-	const int CHOICE1 = 1;
-	const int CHOICE2 = 2;
-	const int CHOICE3 = 3;
-	const int CHOICE4 = 4;
-	const int CHOICE5 = 5;
-	const int CHOICE6 = 6;
-	
-	Student students[SIZE];
-	int size = 0;
-	int rows = 0;
-	int choice;
-	bool continueExecuting = true;
-	
-	ifstream readFile("studentData.txt");
-	
-	cout << fixed << setprecision(2) << endl;
-	
-	printWelcomeMessage();
-	
-	programStartQuit(continueExecuting);
-	
-	while (continueExecuting)
-	{
-		rows = 0;
-		
-		fillArray("studentData.txt", rows, students);
-		
-		cout << endl;
-		displayMenu();
-		choice = validateInput(CHOICE1, CHOICE6);
-		
-		if (choice == CHOICE1)
-		{
-			printEntireList(students, rows);
-		}
-		else if (choice == CHOICE2)
-		{
-			updateMark(students, rows);
-		}
-		else if (choice == CHOICE3)
-		{
-		    printAverageMarks(students, rows);
-		}
-		else if (choice == CHOICE4)
-		{
-			printPassRate(students, rows);
-		}
-		else if (choice == CHOICE5)
-		{
-			printHighestScorersDetails(students, rows);
-		}
-		else
-		{
-			endProgram(continueExecuting);
-		}
-	}
-	
-	return 0;
+    bool continueExecuting = true;
+    
+    cout << fixed << setprecision(2) << endl;
+    printWelcomeMessage();
+    
+    programStartQuit(continueExecuting);
+    
+    if (continueExecuting) 
+    {
+        int rows = 0;
+        fillArray("studentData.txt", rows, pHead);  // fill linked list once
+
+        while (continueExecuting)
+        {
+            displayMenu();
+            int choice = validateInput(1, 6);
+
+            switch (choice)
+            {
+                case 1:
+                    printEntireList(pHead);  // Print using linked list
+                    break;
+                case 2:
+                    // updateMark(pHead);  // Update marks (requires linked list modification)
+                    break;
+                case 3:
+                    // printAverageMarks(pHead);  // Calculate average marks
+                    break;
+                case 4:
+                    // printPassRate(pHead);  // Calculate pass rate
+                    break;
+                case 5:
+                    // printHighestScorerDetails(pHead);  // Find highest scorer
+                    break;
+                case 6:
+                    endProgram(continueExecuting);
+                    break;
+            }
+        }
+
+        FreeList(pHead);  // Clean up memory
+    }
+
+    return 0;
 }
