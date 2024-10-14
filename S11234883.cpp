@@ -3,8 +3,6 @@
 #include <fstream>
 using namespace std;
 
-const int SIZE = 20;
-
 struct Student{
 	string id;
 	double coursework;
@@ -134,6 +132,9 @@ void fillArray(string fileName, int& rows, node*& pHead) {
     } else {
         string id;
         double coursework, finalexam;
+		
+		string discardLine;
+		getline(readFile, discardLine);
 
         // Read through the file and append to the linked list
         while (!readFile.eof()) {
@@ -143,10 +144,6 @@ void fillArray(string fileName, int& rows, node*& pHead) {
             student->id = id;
             student->coursework = coursework;
             student->finalExam = finalexam;
-
-            // Print debug information
-            cout << "Adding Student ID: " << student->id << ", Coursework: " 
-                 << student->coursework << ", Final Exam: " << student->finalExam << endl;
 
             // Allocate new node
             node* pNode = new node;
@@ -194,32 +191,6 @@ string determineGrade(double totalMark)
 	}
 }
 
-int UpdateMark_Validation(int lowerLimit, int upperLimit)
-{
-    int input;
-    cin >> input;
-    
-    while(input < lowerLimit || input > upperLimit || cin.fail())
-	{
-        if (cin.fail())
-		{
-            cin.clear();
-            string dummy;
-            cin >> dummy;
-            cout << "ERROR! Invalid option detected." << endl;
-            cout << "Please enter a number." << endl;
-        }
-		else if (input < lowerLimit || input > upperLimit)
-		{
-            cin.clear();
-            cout << "ERROR! Your choice is not in range." << endl;
-            cout << "Please enter a number between " << lowerLimit << " and " << upperLimit << endl;
-        }
-        cin >> input;
-    }
-    return input;
-}
-
 void printEntireList(node* pHead) {
     if (pHead == NULL) {
         cout << "The student list is empty." << endl;
@@ -245,211 +216,178 @@ void printEntireList(node* pHead) {
     }
 }
 
-void updateMark(Student students[], int size)
+void updateMark(node *phead)
 {
-	string searchId;
-	bool found = false;
-	
-	cout << "Please enter the ID number you would like to search for. Example: S00005" << endl;
-	cin >> searchId;
-	while(cin.fail())
-	{
-		cin.clear();
-		string dummy;
-		cin >> dummy;
-		cout << "ERROR! Invalid Input Detected." << endl;
-		cout << "Please enter letter \"S\" in uppercase followed by numbers only." << endl;
-		cin >> searchId;
-	}
-	
-	for (int i = 0; i < size; i++)
-	{
-		if (students[i].id == searchId)
-		{
-			found = true;
-			const int MIN_CHOICE = 1;
-			const int MAX_CHOICE = 3;
-			const int MARK_UPDATE_MAX = 50;
-			const int MARK_UPDATE_MIN = 0;
+    string searchId;
+    bool found = false;
+    
+    cout << "Please enter the ID number you would like to search for (e.g., S00005): ";
+    cin >> searchId;
 
-			cout << "Which Mark Would You Like To Update?" << endl;
-			cout << "1. Coursework Only" << endl;
-			cout << "2. Final Exam Only" << endl;
-			cout << "3. Course and Final Exam" << endl;		
-			int choice;
-			cin >> choice;
-			while(choice < MIN_CHOICE || choice > MAX_CHOICE || cin.fail())
-			{
-				if (cin.fail())
-				{
-					cin.clear();
-					string dummy;
-					cin >> dummy;
-					cout << "ERROR! Invalid option detected." << endl;
-					cout << "Please enter a number." << endl;
-				}
-				else if (choice < MIN_CHOICE || choice > MAX_CHOICE)
-				{
-					cin.clear();
-					cout << "ERROR! Your choice is not in range." << endl;
-					cout << "Please enter a number between " << MIN_CHOICE << " and " << MAX_CHOICE << endl;
-				}
-				cin >> choice;
-			}
-			switch(choice){
-				case 1: cout << "Enter the new coursework mark: ";
-								cin >> students[i].coursework;								
-								while(students[i].coursework < MARK_UPDATE_MIN || students[i].coursework > MARK_UPDATE_MAX || cin.fail())
-									{
-										if (cin.fail())
-										{
-											cin.clear();
-											string dummy;
-											cin >> dummy;
-											cout << "ERROR! Invalid option detected." << endl;
-											cout << "Please enter a number." << endl;
-										}
-										else if (students[i].coursework < MARK_UPDATE_MIN || students[i].coursework > MARK_UPDATE_MAX)
-										{
-											cin.clear();
-											cout << "ERROR! Your choice is not in range." << endl;
-											cout << "Please enter a number between " << MARK_UPDATE_MIN << " and " << MARK_UPDATE_MAX << endl;
-										}
-										cin >> students[i].coursework;
-									}
-								break;
-				case 2: cout << "Enter the new final exam mark: ";
-								cin >> students[i].finalExam;
-								while(students[i].finalExam < MARK_UPDATE_MIN || students[i].finalExam > MARK_UPDATE_MAX || cin.fail())
-									{
-										if (cin.fail())
-										{
-											cin.clear();
-											string dummy;
-											cin >> dummy;
-											cout << "ERROR! Invalid option detected." << endl;
-											cout << "Please enter a number." << endl;
-										}
-										else if (students[i].finalExam < MARK_UPDATE_MIN || students[i].finalExam > MARK_UPDATE_MAX)
-										{
-											cin.clear();
-											cout << "ERROR! Your choice is not in range." << endl;
-											cout << "Please enter a number between " << MARK_UPDATE_MIN << " and " << MARK_UPDATE_MAX << endl;
-										}
-										cin >> students[i].finalExam;
-									}
-									break;
-				case 3: cout << "Enter the new coursework mark: ";
-								cin >> students[i].coursework;
-								while(students[i].coursework < MARK_UPDATE_MIN || students[i].coursework > MARK_UPDATE_MAX || cin.fail())
-									{
-										if (cin.fail())
-										{
-											cin.clear();
-											string dummy;
-											cin >> dummy;
-											cout << "ERROR! Invalid option detected." << endl;
-											cout << "Please enter a number." << endl;
-										}
-										else if (students[i].coursework < MARK_UPDATE_MIN || students[i].coursework > MARK_UPDATE_MAX)
-										{
-											cin.clear();
-											cout << "ERROR! Your choice is not in range." << endl;
-											cout << "Please enter a number between " << MARK_UPDATE_MIN << " and " << MARK_UPDATE_MAX << endl;
-										}
-										cin >> students[i].coursework;
-									}
-						cout << "Enter the new final exam mark: ";
-								cin >> students[i].finalExam;
-								while(students[i].finalExam < MARK_UPDATE_MIN || students[i].finalExam > MARK_UPDATE_MAX || cin.fail())
-									{
-										if (cin.fail())
-										{
-											cin.clear();
-											string dummy;
-											cin >> dummy;
-											cout << "ERROR! Invalid option detected." << endl;
-											cout << "Please enter a number." << endl;
-										}
-										else if (students[i].finalExam < MARK_UPDATE_MIN || students[i].finalExam > MARK_UPDATE_MAX)
-										{
-											cin.clear();
-											cout << "ERROR! Your choice is not in range." << endl;
-											cout << "Please enter a number between " << MARK_UPDATE_MIN << " and " << MARK_UPDATE_MAX << endl;
-										}
-										cin >> students[i].finalExam;
-									}
-							break;
-			}
-			students[i].totalMark = students[i].coursework + students[i].finalExam;
-			string studentGrade = determineGrade(students[i].totalMark);
-			
-			cout << "\nMarks Updated Successfully!" << endl;
-			cout << "\n" << left << setw(20) << "ID" << setw(20) << "Coursework" << setw(20) << "Final Exam" << setw(20) << "Total" << setw(20) << "Grade" << endl;
-			cout << left << setw(20) << students[i].id << setw(20) << students[i].coursework << setw(20) << students[i].finalExam << setw(20) << students[i].totalMark << setw(20) << studentGrade << endl;
-		}
-	}
-	
-	if (!found)
-	{
-		cout << "\nNo student was found with the ID# " << searchId << endl;
-	}
-}
-
-void printAverageMarks(Student students[], int size)
-{
-    double totalMarks = 0.0;
-
-    for (int i = 0; i < size; i++)
+    // Basic input validation: Ensure ID starts with 'S' and followed by numbers
+    while (cin.fail() || searchId[0] != 'S' || searchId.length() != 6)
     {
-        students[i].totalMark = students[i].coursework + students[i].finalExam;
-        totalMarks += students[i].totalMark;
+        cin.clear();
+        string dummy;
+        cin >> dummy;
+        cout << "ERROR! Invalid Input Detected." << endl;
+        cout << "Please enter ID in the format 'S' followed by 5 digits (e.g., S00005): ";
+        cin >> searchId;
     }
 
-    double averageMarks = totalMarks / size;
+    // Traverse the linked list to find the student with the given ID
+    while (phead != NULL)
+    {
+        Student *studentdata = phead->studentdata;  // Initialize studentdata with the current node's student data
 
-    cout << "\nThe average mark for the class is: " << fixed << setprecision(2) << averageMarks << endl;
+        if (studentdata->id == searchId)
+        {
+            found = true;
+            const int MIN_CHOICE = 1;
+            const int MAX_CHOICE = 3;
+            const int MARK_UPDATE_MAX = 50;
+            const int MARK_UPDATE_MIN = 0;
+
+            cout << "\nWhich Mark Would You Like To Update?" << endl;
+            cout << "1. Coursework Only" << endl;
+            cout << "2. Final Exam Only" << endl;
+            cout << "3. Both Coursework and Final Exam" << endl;
+
+            int choice = validateInput(MIN_CHOICE, MAX_CHOICE);
+
+            switch (choice)
+            {
+                case 1: 
+                    cout << "Enter the new coursework mark: ";
+                    studentdata->coursework = validateInput(MARK_UPDATE_MIN, MARK_UPDATE_MAX);
+                    break;
+                case 2: 
+                    cout << "Enter the new final exam mark: ";
+                    studentdata->finalExam = validateInput(MARK_UPDATE_MIN, MARK_UPDATE_MAX);
+                    break;
+                case 3: 
+                    cout << "Enter the new coursework mark: ";
+                    studentdata->coursework = validateInput(MARK_UPDATE_MIN, MARK_UPDATE_MAX);
+                    cout << "Enter the new final exam mark: ";
+                    studentdata->finalExam = validateInput(MARK_UPDATE_MIN, MARK_UPDATE_MAX);
+                    break;
+            }
+
+            studentdata->totalMark = studentdata->coursework + studentdata->finalExam;
+            string studentGrade = determineGrade(studentdata->totalMark);
+
+            cout << "\nMarks Updated Successfully!" << endl;
+            cout << left << setw(20) << "ID" << setw(20) << "Coursework" << setw(20) << "Final Exam" 
+                 << setw(20) << "Total" << setw(20) << "Grade" << endl;
+            cout << left << setw(20) << studentdata->id << setw(20) << studentdata->coursework 
+                 << setw(20) << studentdata->finalExam << setw(20) << studentdata->totalMark 
+                 << setw(20) << studentGrade << endl;
+
+            break;  // Exit the loop once the student is found and marks are updated
+        }
+
+        phead = phead->pNext;  // Move to the next node
+    }
+
+    if (!found)
+    {
+        cout << "\nNo student was found with the ID# " << searchId << endl;
+    }
 }
 
-void printPassRate(Student students[], int size)
+void printAverageMarks(node *pHead)
 {
-	double passRate = 0;
-	double passedCounter = 0;
-	
-	for (int i = 0; i < size; i++)
-	{
-		students[i].totalMark = students[i].coursework + students[i].finalExam;
-		
-		if(students[i].totalMark >= 50)
-		{
-			passedCounter++;
-		}
-	}
-	
-	passRate = (passedCounter/size)*100;
-	
-	cout << "\nThe pass rate of the class is " << passRate << "%" << endl;	
+    double totalMarks = 0.0;
+    int studentCount = 0;
+
+    node *current = pHead;
+
+    while (current != NULL)
+    {
+        Student *studentdata = current->studentdata;
+        studentdata->totalMark = studentdata->coursework + studentdata->finalExam;
+        totalMarks += studentdata->totalMark;
+        studentCount++;
+
+        current = current->pNext;  // Move to the next node
+    }
+
+    if (studentCount > 0)
+    {
+        double averageMarks = totalMarks / studentCount;
+        cout << "\nThe average mark for the class is: " << fixed << setprecision(2) << averageMarks << endl;
+    }
+    else
+    {
+        cout << "\nNo students found in the list." << endl;
+    }
 }
 
-void printHighestScorersDetails(Student students[], int size)
+void printPassRate(node *pHead)
 {
-	int highestScorerIndex = 0;
-	
-	for (int i = 0; i < size; i++)
-	{
-		students[i].totalMark = students[i].coursework + students[i].finalExam;
-		
-		if(students[i].totalMark > students[highestScorerIndex].totalMark)
-		{
-			highestScorerIndex = i;
-		}
-	}
-	
-	string studentGrade = determineGrade(students[highestScorerIndex].totalMark);
-	
-	cout << "\nHighest Scorer's Full Details:" << endl;
-	cout << "\n" << left << setw(20) << "ID" << setw(20) << "Coursework" << setw(20) << "Final Exam" << setw(20) << "Total" << setw(20) << "Grade" << endl;
-	cout << left << setw(20) << students[highestScorerIndex].id << setw(20) << students[highestScorerIndex].coursework << setw(20) << students[highestScorerIndex].finalExam << setw(20) << students[highestScorerIndex].totalMark << setw(20) << studentGrade << endl;
+    int totalStudents = 0;      // Counter for total number of students
+    int passedCounter = 0;      // Counter for students who passed
+
+    node *current = pHead;      // Start at the head of the list
+
+    // Traverse the linked list
+    while (current != NULL) {
+        Student *studentdata = current->studentdata;  // Access the student data
+        studentdata->totalMark = studentdata->coursework + studentdata->finalExam;  // Calculate total mark
+
+        if (studentdata->totalMark >= 50) {
+            passedCounter++;    // Increment if the student passed
+        }
+
+        totalStudents++;        // Increment total student count
+        current = current->pNext;  // Move to the next node
+    }
+
+    if (totalStudents > 0) {
+        double passRate = (static_cast<double>(passedCounter) / totalStudents) * 100;  // Calculate pass rate
+        cout << "\nThe pass rate of the class is " << passRate << "%" << endl;
+    } else {
+        cout << "\nNo students found in the list." << endl;
+    }
+}
+
+void printHighestScorerDetails(node *pHead)
+{
+    if (pHead == NULL) {
+        cout << "\nNo students found in the list." << endl;
+        return;
+    }
+
+    node *current = pHead;
+    node *highestScorer = pHead;
+
+    while (current != NULL)
+    {
+        Student *studentdata = current->studentdata;
+        studentdata->totalMark = studentdata->coursework + studentdata->finalExam;
+
+        // Compare with the current highest scorer
+        if (studentdata->totalMark > highestScorer->studentdata->totalMark)
+        {
+            highestScorer = current;
+        }
+
+        current = current->pNext;  // Move to the next node
+    }
+
+    // Display the highest scorer details
+    Student *highestStudent = highestScorer->studentdata;
+    string studentGrade = determineGrade(highestStudent->totalMark);
+    
+    cout << "\nHighest Scorer's Full Details:" << endl;
+    cout << left << setw(20) << "ID" << setw(20) << "Coursework" 
+         << setw(20) << "Final Exam" << setw(20) << "Total" 
+         << setw(20) << "Grade" << endl;
+    cout << left << setw(20) << highestStudent->id 
+         << setw(20) << highestStudent->coursework 
+         << setw(20) << highestStudent->finalExam 
+         << setw(20) << highestStudent->totalMark 
+         << setw(20) << studentGrade << endl;
 }
 
 int main()
@@ -477,16 +415,16 @@ int main()
                     printEntireList(pHead);  // Print using linked list
                     break;
                 case 2:
-                    // updateMark(pHead);  // Update marks (requires linked list modification)
+                    updateMark(pHead);  // Update marks (requires linked list modification)
                     break;
                 case 3:
-                    // printAverageMarks(pHead);  // Calculate average marks
+                    printAverageMarks(pHead);  // Calculate average marks
                     break;
                 case 4:
-                    // printPassRate(pHead);  // Calculate pass rate
+                    printPassRate(pHead);  // Calculate pass rate
                     break;
                 case 5:
-                    // printHighestScorerDetails(pHead);  // Find highest scorer
+					printHighestScorerDetails(pHead);  // Find highest scorer
                     break;
                 case 6:
                     endProgram(continueExecuting);
