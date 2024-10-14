@@ -2,8 +2,8 @@
 
 ## Authors
 
-- [@SRVSRR](https://www.github.com/octokatherine)
-- [@MarLeeSeaRoll](https://www.github.com/octokatherine)
+- [@SRVSRR](https://www.github.com/SRVSRR)
+- [@MarLeeSeaRoll](https://www.github.com/MarLeeSeaRoll)
 
 ## Overview
 
