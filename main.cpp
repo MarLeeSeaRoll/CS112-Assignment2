@@ -2,6 +2,7 @@
 #include "LinkedList.h"
 #include "Student.h"
 #include "Utilities.h"
+#include "Messages.h"
 
 using namespace std;
 
@@ -11,16 +12,18 @@ int main() {
     // Read student data from file
     readFileAndStoreData(studentList, "studentData.txt");
 
+    void printWelcomeMessage();
+
+    void programStartQuit(bool& continueExecuting);
+
     int choice;
-    do {
-        cout << "\nMenu:\n";
-        cout << "1. Print All Students\n";
-        cout << "2. Update Student Marks\n";
-        cout << "3. Show Highest Scorer\n";
-        cout << "4. Calculate Average Marks\n";
-        cout << "5. Calculate Pass Rate\n";
-        cout << "6. Exit\n";
-        cout << "Enter your choice: ";
+    bool continueExecuting = true;
+
+    programStartQuit(continueExecuting);
+	
+	while (continueExecuting)
+	{
+		void displayMenu();
         cin >> choice;
 
         switch (choice) {
@@ -31,19 +34,51 @@ int main() {
             case 2: {
                 string id;
                 double coursework, finalExam;
+
                 cout << "Enter student ID to update: ";
                 cin >> id;
+                while(cin.fail())
+                {
+                    cin.clear();
+                    string dummy;
+                    cin >> dummy;
+                    cout << "ERROR! Invalid Input Detected." << endl;
+                    cout << "Please enter letter \"S\" in uppercase followed by numbers only." << endl;
+                    cin >> id;
+                }
 
                 Student* student = studentList.findById(id);
                 if (student) {
-                    cout << "Enter new coursework and final exam marks: ";
-                    cin >> coursework >> finalExam;
+                    void updateMarkChoices();
+                    int updateChoice; 
+                    updateChoice = ValidateUpdateMarks<int>(1, 3);
+
+                    switch(updateChoice){
+                        case 1:
+                            cout << "Enter new coursework marks (0 - 50): ";
+                            coursework = ValidateUpdateMarks<double>(0.0, 50.0);
+                            break;
+
+                        case 2:
+                            cout << "Enter new final exam marks (0 - 50): ";
+                            finalExam = ValidateUpdateMarks<double>(0.0, 50.0);
+                            break;
+
+                        case 3:
+                            cout << "Enter new coursework marks (0 - 50): ";
+                            coursework = ValidateUpdateMarks<double>(0.0, 50.0);
+
+                            cout << "Enter new final exam marks (0 - 50): ";
+                            finalExam = ValidateUpdateMarks<double>(0.0, 50.0);
+                            break;
+                    }
+
                     student->updateMarks(coursework, finalExam);
                     cout << "Marks updated!\n";
-                } else {
+                } else 
+                {
                     cout << "Student not found.\n";
                 }
-                break;
             }
 
             case 3: {
@@ -69,13 +104,12 @@ int main() {
 
             case 6:
                 cout << "Exiting program.\n";
-                break;
+                endProgram(continueExecuting);
 
             default:
                 cout << "Invalid option!\n";
         }
-
-    } while (choice != 0);
+	}
 
     return 0;
 }

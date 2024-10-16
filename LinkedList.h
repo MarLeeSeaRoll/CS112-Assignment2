@@ -10,7 +10,7 @@ public:
     T data;
     Node* next;
     
-    Node(T val) : data(val), next(nullptr) {}
+    Node(T val) : data(val), next(NULL) {}
 };
 
 template <typename T>
@@ -19,7 +19,7 @@ private:
     Node<T>* head;
 
 public:
-    LinkedList() : head(nullptr) {}
+    LinkedList() : head(NULL) {}
 
     // Insert a new node at the end of the linked list
     void insert(T data) {
@@ -49,7 +49,7 @@ public:
             }
             temp = temp->next;
         }
-        return nullptr;
+            return NULL;
     }
 
     // Print all student data
