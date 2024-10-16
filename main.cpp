@@ -9,22 +9,20 @@ using namespace std;
 int main() {
     LinkedList<Student> studentList;
 
-    // Read student data from file
-    readFileAndStoreData(studentList, "studentData.txt");
-
-    void printWelcomeMessage();
-
-    void programStartQuit(bool& continueExecuting);
+    printWelcomeMessage();
 
     int choice;
     bool continueExecuting = true;
 
     programStartQuit(continueExecuting);
+
+    // Read student data from file
+    readFileAndStoreData(studentList, "studentData.txt");
 	
 	while (continueExecuting)
 	{
-		void displayMenu();
-        cin >> choice;
+		displayMenu();
+        choice = ValidateUpdateMarks<int>(1, 6);
 
         switch (choice) {
             case 1:
@@ -48,8 +46,9 @@ int main() {
                 }
 
                 Student* student = studentList.findById(id);
-                if (student) {
-                    void updateMarkChoices();
+                if (student)
+                {
+                    updateMarkMenu();
                     int updateChoice; 
                     updateChoice = ValidateUpdateMarks<int>(1, 3);
 
@@ -74,8 +73,8 @@ int main() {
                     }
 
                     student->updateMarks(coursework, finalExam);
-                    cout << "Marks updated!\n";
-                } else 
+                    cout << "Marks updated!\n";             } 
+                else 
                 {
                     cout << "Student not found.\n";
                 }
@@ -99,15 +98,15 @@ int main() {
             }
 
             case 5: {
-
+                double average = calculateAverageMarks(studentList);
+                cout << "Average Marks: " << average << endl;
+                break;
             }
-
-            case 6:
+            
+            case 6: {
                 cout << "Exiting program.\n";
                 endProgram(continueExecuting);
-
-            default:
-                cout << "Invalid option!\n";
+            }
         }
 	}
 

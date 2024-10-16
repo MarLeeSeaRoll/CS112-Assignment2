@@ -9,7 +9,7 @@
         "-std=c++17",           // or the standard you want to use
         "*.cpp",                // compile all .cpp files in the folder
         "-o",
-        "output_program"        // the output executable
+        "output"        // the output executable
       ],
       "group": {
         "kind": "build",
