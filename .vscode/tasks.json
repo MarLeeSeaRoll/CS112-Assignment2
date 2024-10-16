@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build project",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",           // or the standard you want to use
+        "*.cpp",                // compile all .cpp files in the folder
+        "-o",
+        "output_program"        // the output executable
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "detail": "Generated task for building the project."
+    }
+  ]
+}
