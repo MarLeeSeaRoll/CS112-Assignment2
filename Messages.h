@@ -6,7 +6,7 @@
 #include <string>
 #include <iostream>
 
-using namespace  std;
+using namespace std;
 
 void printWelcomeMessage()
 {
@@ -35,12 +35,12 @@ void endProgram(bool& continueExecuting)
     cout << "|  Thank you for using this program!  |\n";
     cout << "+-------------------------------------+\n";
 }
-void updateMarkChoices(){
+
+void updateMarkMenu(){
     cout << "Which Mark Would You Like To Update?" << endl;
     cout << "1. Coursework Only" << endl;
     cout << "2. Final Exam Only" << endl;
     cout << "3. Course and Final Exam" << endl;	
 }
 	
-
 #endif
