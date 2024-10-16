@@ -21,14 +21,11 @@ void readFileAndStoreData(LinkedList<Student>& studentList, const string& filena
         cout << "Error: Cannot open file!" << endl;
         return;
     }
-
+    double coursework, finalExam;
+    string id;
     string line;
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string id;
-        double coursework, finalExam;
-        ss >> id >> coursework >> finalExam;
-
+    getline(file, line);
+    while (file >> id >> coursework >> finalExam) {
         Student student(id, coursework, finalExam);
         studentList.insert(student);
     }
